@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Juan David Valencia · Analista Red Team | Pentesting Ofensivo</title>
+<meta name="description" content="Portafolio de Juan David Valencia Cifuentes — Analista Red Team, pentesting ofensivo sobre web, red, infraestructura, Active Directory e IoT.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#060508; --bg-2:#0a0810; --surf:#0e0c12; --surf-2:#15121b;
+  --border:rgba(255,255,255,.07); --border-strong:rgba(255,255,255,.13);
+  --txt:#ececee; --txt-2:#b5b5bb; --mute:#74757a; --mute-2:#4a4a52;
+  --red:#cf1024; --red-bright:#e11425; --red-glow:rgba(207,16,36,.22);
+  --gold:#d9a441; --gold-glow:rgba(217,164,65,.18);
+  --cyan:#3dbfbf;
+  --fd:'Chakra Petch',system-ui,sans-serif;
+  --fm:'Space Mono',ui-monospace,monospace;
+  --fs:'Inter',system-ui,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg); color:var(--txt);
+  font-family:var(--fs); font-size:15px; line-height:1.55;
+  -webkit-font-smoothing:antialiased; overflow-x:hidden;
+}
+::selection{background:var(--red);color:#fff}
+a{color:inherit;text-decoration:none}
+img{max-width:100%}
+
+/* ── blueprint grid + grain + scanlines ─────────────────── */
+.bg-grid{
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-image:
+    linear-gradient(rgba(255,255,255,.028) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.028) 1px,transparent 1px);
+  background-size:44px 44px;
+}
+.bg-grain{
+  position:fixed; inset:-20%; z-index:1; pointer-events:none;
+  opacity:.5; mix-blend-mode:overlay;
+}
+.bg-vignette{
+  position:fixed; inset:0; z-index:1; pointer-events:none;
+  background:radial-gradient(ellipse at 50% 0%, transparent 55%, rgba(0,0,0,.55) 100%);
+}
+.wrap{position:relative; z-index:2; max-width:1180px; margin:0 auto; padding:0 28px}
+
+/* ── topnav ─────────────────────────────────────────────── */
+.topnav{
+  position:fixed; top:0; left:0; right:0; z-index:50;
+  border-bottom:1px solid var(--border);
+  background:rgba(6,5,8,.82); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+}
+.topnav-in{max-width:1180px; margin:0 auto; padding:0 28px; height:64px; display:flex; align-items:center; justify-content:space-between; gap:24px}
+.logo{display:flex; align-items:center; gap:10px; cursor:pointer}
+.logo-mark svg{display:block}
+.logo-wm{font-family:var(--fd); font-weight:700; font-size:15px; letter-spacing:.06em; line-height:1.05}
+.logo-wm em{font-style:normal; color:var(--red-bright)}
+.logo-tag{font-family:var(--fm); font-size:9px; color:var(--mute); letter-spacing:.22em; text-transform:uppercase}
+.topnav-links{display:flex; align-items:center; gap:4px; list-style:none}
+.topnav-links a{
+  font-family:var(--fm); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--txt-2); padding:8px 13px; border-radius:4px; transition:.2s;
+}
+.topnav-links a:hover{color:var(--txt); background:rgba(255,255,255,.04)}
+.topnav-links a.active{color:var(--txt); box-shadow:inset 0 -2px 0 var(--red)}
+.nav-cta{
+  font-family:var(--fm); font-size:11.5px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+  color:#0a0810; background:linear-gradient(135deg,var(--gold),#e8c066);
+  padding:9px 14px; border-radius:4px; transition:.2s; white-space:nowrap;
+}
+.nav-cta:hover{box-shadow:0 0 18px var(--gold-glow); transform:translateY(-1px)}
+.burger{display:none; background:none; border:1px solid var(--border-strong); color:var(--txt); width:38px; height:34px; border-radius:4px; font-family:var(--fm); font-size:14px; cursor:pointer}
+
+/* ── hero ───────────────────────────────────────────────── */
+.hero{position:relative; padding:180px 0 90px; border-bottom:1px solid var(--border); overflow:hidden}
+.hero-wrap{display:grid; grid-template-columns:1.15fr .85fr; gap:56px; align-items:center}
+.over-line{
+  font-family:var(--fm); font-size:12px; color:var(--mute); letter-spacing:.06em;
+  display:flex; align-items:center; gap:10px; margin-bottom:26px;
+}
+.over-line b{color:var(--red-bright); font-weight:700}
+.hero-title{
+  font-family:var(--fd); font-weight:700; font-size:clamp(34px,5vw,60px); line-height:1.04;
+  letter-spacing:-.01em; margin-bottom:22px;
+}
+.hero-title em{font-style:normal; color:var(--red-bright); text-shadow:0 0 40px var(--red-glow)}
+.hero-title .rl{display:inline}
+.hero-sub{color:var(--txt-2); font-size:17px; max-width:540px; margin-bottom:34px}
+.hero-sub b{color:var(--txt); font-weight:600}
+.hero-actions{display:flex; gap:14px; flex-wrap:wrap; align-items:center}
+.btn{
+  display:inline-flex; align-items:center; gap:10px; font-family:var(--fd); font-weight:600;
+  font-size:13.5px; letter-spacing:.04em; padding:13px 24px; border-radius:4px; border:1px solid var(--border-strong);
+  color:var(--txt); transition:.2s; cursor:pointer;
+}
+.btn-mono{font-family:var(--fm); font-size:11.5px; letter-spacing:.12em; text-transform:uppercase}
+.btn-red{background:linear-gradient(135deg,#d2061e,var(--red-bright)); color:#fff; border-color:transparent; box-shadow:0 6px 30px rgba(207,16,36,.28)}
+.btn-red:hover{box-shadow:0 8px 40px rgba(207,16,36,.45); transform:translateY(-2px)}
+.btn-ghost:hover{background:rgba(255,255,255,.05); border-color:var(--border-strong)}
+.btn-gold{color:var(--gold); border-color:rgba(217,164,65,.4)}
+.btn-gold:hover{background:var(--gold); color:#0a0810; border-color:transparent; box-shadow:0 6px 26px var(--gold-glow)}
+
+/* terminal panel */
+.term{
+  position:relative; border:1px solid var(--border-strong); border-radius:6px;
+  background:linear-gradient(180deg,var(--surf-2),#0b0910);
+  font-family:var(--fm); font-size:11.5px; line-height:1.6; color:#cdd0db;
+  box-shadow:0 30px 80px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.05);
+}
+.term-bar{display:flex; align-items:center; gap:6px; padding:11px 14px; border-bottom:1px solid var(--border)}
+.term-dot{width:10px; height:10px; border-radius:50%}
+.term-dot.r{background:var(--red-bright)} .term-dot.y{background:var(--gold)} .term-dot.g{background:#2fbf71}
+.term-name{margin-left:8px; font-size:10.5px; color:var(--mute); letter-spacing:.08em}
+.term-name b{color:var(--txt-2); font-weight:700}
+.term-body{padding:16px 16px 14px; height:280px; overflow:hidden; position:relative}
+.term-body::after{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background:repeating-linear-gradient(0deg,rgba(255,255,255,.018) 0 1px,transparent 1px 3px);
+}
+.tl{white-space:pre-wrap; word-break:break-word}
+.tl .c-red{color:#ff5566} .tl .c-cyan{color:var(--cyan)} .tl .c-mut{color:#6b6d75}
+.tl .c-grn{color:#3fca82} .tl .c-dim{color:#8b8d95}
+.tl .c-whi{color:#e8e9ee}
+.term-caret{display:inline-block; width:8px; height:14px; background:var(--red-bright); vertical-align:text-bottom; animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+.term-status{display:flex; flex-wrap:wrap; gap:8px; padding:10px 14px; border-top:1px solid var(--border)}
+.ts{padding:4px 8px; border:1px solid var(--border); border-radius:3px; font-size:9.5px; letter-spacing:.1em; color:var(--mute); text-transform:uppercase}
+.ts b{color:var(--red-bright)} .ts .g{color:#3fca82} .ts .c{color:var(--cyan)} .ts .m{color:var(--txt-2)}
+
+.hero-scroll{margin-top:56px; font-family:var(--fm); font-size:10.5px; letter-spacing:.3em; text-transform:uppercase; color:var(--mute); display:flex; align-items:center; gap:14px}
+.hero-scroll::before{content:""; height:1px; width:60px; background:linear-gradient(90deg,transparent,var(--red))}
+.hero-scroll .arr{color:var(--red); animation:drop 1.6s ease-in-out infinite}
+@keyframes drop{50%{transform:translateY(6px)}}
+
+.hexline{position:absolute; right:-20px; top:120px; display:flex; gap:6px; font-family:var(--fm); font-size:9px; color:rgba(207,16,36,.4); letter-spacing:.3em; writing-mode:vertical-rl; user-select:none}
+
+/* ── marquee ────────────────────────────────────────────── */
+.mq{border-bottom:1px solid var(--border); background:var(--bg-2); overflow:hidden; position:relative; z-index:2}
+.mq-in{display:flex; align-items:center; gap:0; white-space:nowrap; animation:mq 32s linear infinite; width:max-content}
+.mq-seq{display:flex; align-items:center}
+.mq-seq span{
+  font-family:var(--fm); font-size:11px; letter-spacing:.18em; text-transform:uppercase;
+  color:var(--mute); padding:13px 22px; display:inline-flex; align-items:center; gap:16px;
+}
+.mq-seq span::after{content:"//"; color:var(--red); opacity:.7}
+.mq-seq span b{color:var(--txt-2); font-weight:700}
+@keyframes mq{to{transform:translateX(-50%)}}
+.mq-label{position:absolute; left:28px; top:0; bottom:0; display:flex; align-items:center; z-index:2; font-family:var(--fm); font-size:10px; letter-spacing:.22em; color:var(--red-bright); background:var(--bg-2); padding:0 18px 0 0; text-transform:uppercase}
+.mq-label::after{content:""; height:100%; width:120px; background:linear-gradient(90deg,var(--bg-2),transparent); position:absolute; left:100%; top:0}
+.mq.has-label .mq-in{margin-left:190px}
+
+/* ── sections general ───────────────────────────────────── */
+section{position:relative; z-index:2; padding:96px 0}
+.section-head{display:flex; align-items:flex-end; gap:22px; margin-bottom:52px; border-bottom:1px solid var(--border); padding-bottom:22px}
+.sec-no{font-family:var(--fm); font-weight:700; font-size:44px; line-height:1; color:transparent; -webkit-text-stroke:1px var(--red); opacity:.85}
+.sec-title{font-family:var(--fd); font-weight:700; font-size:clamp(24px,3vw,34px); letter-spacing:-.01em}
+.sec-title em{font-style:normal; color:var(--txt-2)}
+.sec-sub{font-family:var(--fm); font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--mute); margin-top:6px}
+.section-head .head-tag{margin-left:auto; font-family:var(--fm); font-size:10px; letter-spacing:.18em; color:var(--mute); border:1px solid var(--border); padding:6px 10px; border-radius:3px; white-space:nowrap}
+.section-head .head-tag b{color:var(--red-bright)}
+
+.reveal{opacity:0; transform:translateY(26px); transition:opacity .7s ease, transform .7s ease}
+.reveal.on{opacity:1; transform:none}
+
+/* ── perfil ─────────────────────────────────────────────── */
+.perfil-grid{display:grid; grid-template-columns:1.15fr .85fr; gap:52px; align-items:center}
+.perfil-grid p{color:var(--txt-2); margin-bottom:18px; font-size:15.5px}
+.perfil-grid p strong{color:var(--txt); font-weight:600}
+.syscard{
+  position:relative; border:1px solid var(--border-strong); border-radius:6px; overflow:hidden;
+  background:linear-gradient(180deg,var(--surf-2),#0a080e);
+}
+.syscard-title{display:flex; align-items:center; gap:10px; padding:13px 16px; border-bottom:1px solid var(--border); font-family:var(--fm); font-size:10.5px; letter-spacing:.2em; color:var(--mute); text-transform:uppercase}
+.syscard-title::before{content:"▮"; color:var(--red)}
+.syscard-title b{color:var(--red-bright)}
+.syscard-body{padding:16px; font-family:var(--fm); font-size:12px; line-height:2.05; color:#c9ccd6}
+.syscard-row{display:grid; grid-template-columns:120px 1fr; gap:10px; border-bottom:1px dashed rgba(255,255,255,.05); padding:4px 0}
+.syscard-row .k{color:var(--mute)} .syscard-row .k::after{content:"·"; margin-left:4px}
+.syscard-row .v{color:var(--txt)} .syscard-row .v em{color:var(--red-bright); font-style:normal}
+.syscard-row .v .c{color:var(--cyan)}
+.dots{display:flex; gap:5px; margin-top:8px}
+.dots i{width:6px; height:6px; border-radius:50%; background:var(--mute-2)}
+.dots i.hot{background:var(--red-bright); box-shadow:0 0 10px var(--red)}
+.chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:4px}
+.chip{
+  font-family:var(--fm); font-size:10.5px; letter-spacing:.05em; color:var(--txt-2);
+  border:1px solid var(--border); border-radius:3px; padding:5px 10px; background:rgba(255,255,255,.02);
+}
+.chip:hover{border-color:var(--red); color:var(--txt)}
+.chip.r{border-color:rgba(207,16,36,.4); color:#ff8591}
+.chip.g{border-color:rgba(63,202,130,.3); color:#7edca8}
+.chip.c{border-color:rgba(61,191,191,.32); color:#7fd2d2}
+
+/* ── ataque layers ──────────────────────────────────────── */
+.layers{display:grid; grid-template-columns:repeat(3,1fr); gap:18px}
+.layer{
+  position:relative; border:1px solid var(--border); border-radius:6px; padding:30px 26px 26px;
+  background:linear-gradient(180deg,var(--surf),var(--bg-2)); transition:.25s; overflow:hidden;
+}
+.layer::before{content:""; position:absolute; inset:0 0 auto 0; height:2px; background:var(--red); opacity:.5}
+.layer:hover{transform:translateY(-4px); border-color:var(--border-strong); box-shadow:0 24px 60px rgba(0,0,0,.4)}
+.layer .dep{font-family:var(--fm); font-size:10px; letter-spacing:.22em; color:var(--red-bright); text-transform:uppercase; margin-bottom:18px}
+.layer .dep span{color:var(--mute)}
+.layer h3{font-family:var(--fd); font-weight:700; font-size:21px; margin-bottom:14px}
+.layer h3 em{font-style:normal; color:var(--red-bright); font-size:13px; font-family:var(--fm); letter-spacing:.1em}
+.layer p{color:var(--txt-2); font-size:13.5px; margin-bottom:18px}
+.layer .chips{margin-top:2px}
+.layer .layer-no{position:absolute; right:18px; top:24px; font-family:var(--fm); font-weight:700; font-size:52px; line-height:1; color:rgba(255,255,255,.03); -webkit-text-stroke:1px rgba(255,255,255,.06)}
+.layer .route{font-family:var(--fm); font-size:10px; color:var(--mute); letter-spacing:.08em; margin-bottom:20px; display:flex; gap:8px; align-items:center}
+.layer .route b{color:var(--txt-2); font-weight:400}
+.layer .route .sep{color:var(--red); opacity:.6}
+
+/* ── experiencia timeline ───────────────────────────────── */
+.timeline{position:relative; padding-left:34px}
+.timeline::before{content:""; position:absolute; left:8px; top:6px; bottom:6px; width:1px; background:linear-gradient(180deg,var(--red),rgba(207,16,36,.15))}
+.job{position:relative; margin-bottom:34px}
+.job::before{
+  content:""; position:absolute; left:-34px; top:6px; width:17px; height:17px; border-radius:50%;
+  background:var(--bg); border:2px solid var(--red); box-shadow:0 0 0 5px rgba(207,16,36,.12);
+}
+.job-card{
+  border:1px solid var(--border); border-radius:6px; padding:26px 28px;
+  background:linear-gradient(180deg,var(--surf),var(--bg-2)); transition:.25s;
+}
+.job-card:hover{border-color:var(--border-strong)}
+.job-top{display:flex; justify-content:space-between; gap:18px; flex-wrap:wrap; align-items:baseline; margin-bottom:6px}
+.job-role{font-family:var(--fd); font-weight:700; font-size:19px}
+.job-role em{font-style:normal; color:var(--red-bright)}
+.job-company{font-family:var(--fm); font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--cyan); margin-bottom:14px}
+.job-date{font-family:var(--fm); font-size:11px; color:var(--gold); letter-spacing:.08em; border:1px solid rgba(217,164,65,.32); border-radius:3px; padding:5px 10px; white-space:nowrap}
+.job-date .live{display:inline-block; width:6px; height:6px; border-radius:50%; background:#3fca82; margin-right:6px; animation:blink 1.6s infinite}
+.job ul{list-style:none; display:grid; gap:9px; margin:14px 0 0}
+.job li{color:var(--txt-2); font-size:14px; padding-left:18px; position:relative}
+.job li::before{content:"▸"; position:absolute; left:0; color:var(--red); opacity:.75}
+.job-tags{display:flex; flex-wrap:wrap; gap:8px; margin-top:18px}
+.job-tags .chip{border-color:rgba(207,16,36,.28); color:#ff9b4f}
+
+/* ── logros ─────────────────────────────────────────────── */
+.logros{display:grid; grid-template-columns:1fr 1fr; gap:16px}
+.logro{
+  display:flex; gap:18px; border:1px solid var(--border); border-radius:6px; padding:20px 22px;
+  background:var(--surf); transition:.25s;
+}
+.logro:hover{border-color:rgba(207,16,36,.4); box-shadow:0 18px 44px rgba(0,0,0,.35)}
+.logro-n{font-family:var(--fm); font-weight:700; font-size:20px; color:transparent; -webkit-text-stroke:1px var(--red); min-width:38px}
+.logro p{color:var(--txt-2); font-size:13.5px}
+.logro p b{color:var(--txt); font-weight:600}
+
+/* ── arsenal ────────────────────────────────────────────── */
+.arsenal{display:grid; grid-template-columns:repeat(3,1fr); gap:18px}
+.tool{
+  border:1px solid var(--border); border-radius:6px; padding:24px 22px;
+  background:linear-gradient(180deg,var(--surf),var(--bg-2)); transition:.25s;
+}
+.tool:hover{transform:translateY(-3px); border-color:var(--border-strong)}
+.tool-cat{display:flex; align-items:center; gap:12px; margin-bottom:16px}
+.tool-idx{font-family:var(--fm); font-size:10px; font-weight:700; color:var(--bg); background:var(--red); border-radius:3px; padding:4px 7px; letter-spacing:.08em}
+.tool h4{font-family:var(--fd); font-weight:700; font-size:15.5px; letter-spacing:.01em}
+.tool .chips{flex-direction:column; align-items:stretch; gap:6px}
+.tool .chip{display:flex; justify-content:space-between; align-items:center; font-size:11px; padding:7px 11px}
+.tool .chip i{font-style:normal; color:var(--mute); font-size:9.5px; letter-spacing:.08em}
+.tool .chip b{color:var(--txt-2); font-weight:400}
+
+/* ── formación ──────────────────────────────────────────── */
+.form{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+.fcard{
+  border:1px solid var(--border); border-radius:6px; background:var(--surf); overflow:hidden;
+}
+.fcard summary{
+  list-style:none; cursor:pointer; display:flex; align-items:center; gap:14px; padding:17px 20px;
+  transition:.2s; user-select:none;
+}
+.fcard summary::-webkit-details-marker{display:none}
+.fcard summary:hover{background:rgba(255,255,255,.03)}
+.fcard summary .fx{font-family:var(--fm); font-weight:700; font-size:16px; color:var(--red-bright); width:30px}
+.fcard summary .fn{font-family:var(--fd); font-weight:600; font-size:14.5px}
+.fcard summary .fcnt{margin-left:auto; font-family:var(--fm); font-size:10.5px; color:var(--gold); border:1px solid rgba(217,164,65,.3); padding:3px 8px; border-radius:3px; white-space:nowrap}
+.fcard summary .fcaret{color:var(--mute); font-family:var(--fm); font-size:11px; transition:.25s}
+.fcard[open] summary .fcaret{transform:rotate(90deg); color:var(--red)}
+.fcourses{padding:4px 20px 18px 64px; display:flex; flex-wrap:wrap; gap:7px; border-top:1px dashed rgba(255,255,255,.06); padding-top:14px}
+.fcourses .chip{font-size:10.5px}
+
+/* ── educación ──────────────────────────────────────────── */
+.edu-grid{display:grid; grid-template-columns:1fr 1fr; gap:18px}
+.edu{
+  border:1px solid var(--border); border-radius:6px; padding:24px 26px; background:linear-gradient(180deg,var(--surf),var(--bg-2));
+}
+.edu .school{font-family:var(--fd); font-weight:700; font-size:18px; margin-bottom:4px}
+.edu .deg{color:var(--txt-2); font-size:14px}
+.edu .yr{font-family:var(--fm); font-size:11px; color:var(--mute); letter-spacing:.08em; margin-top:12px}
+.edu .yr b{color:var(--cyan); font-weight:700}
+.edu .badge{display:inline-block; margin-top:12px; font-family:var(--fm); font-size:9.5px; letter-spacing:.14em; text-transform:uppercase; padding:4px 9px; border-radius:3px}
+.badge.on{background:rgba(63,202,130,.12); color:#3fca82; border:1px solid rgba(63,202,130,.3)}
+.badge.done{background:rgba(255,255,255,.05); color:var(--txt-2); border:1px solid var(--border)}
+.lang{display:grid; gap:18px; margin-top:40px}
+.lang-row{display:grid; grid-template-columns:200px 1fr 90px; gap:16px; align-items:center}
+.lang-row .l-name{font-family:var(--fd); font-weight:600; font-size:14px}
+.lang-row .l-name small{display:block; font-family:var(--fm); font-size:9.5px; color:var(--mute); letter-spacing:.1em; text-transform:uppercase}
+.lang-bar{height:8px; border-radius:4px; background:rgba(255,255,255,.06); overflow:hidden; border:1px solid var(--border)}
+.lang-bar i{display:block; height:100%; background:linear-gradient(90deg,var(--red),var(--red-bright)); border-radius:4px; transition:width 1.4s ease}
+.lang-lvl{font-family:var(--fm); font-size:11px; color:var(--txt-2); text-align:right; letter-spacing:.06em; text-transform:uppercase}
+
+/* ── stats band ─────────────────────────────────────────── */
+.stats{border-top:1px solid var(--border); border-bottom:1px solid var(--border); background:var(--bg-2); padding:0}
+.stats-in{display:grid; grid-template-columns:repeat(4,1fr); }
+.stat{display:flex; flex-direction:column; gap:6px; padding:36px 28px; border-right:1px solid var(--border); position:relative}
+.stat:last-child{border-right:none}
+.stat .num{font-family:var(--fd); font-weight:700; font-size:clamp(30px,3.4vw,42px); line-height:1; color:var(--txt)}
+.stat .num b{font-size:.5em; color:var(--red-bright); font-weight:700}
+.stat .lbl{font-family:var(--fm); font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--mute)}
+.stat .hint{font-family:var(--fm); font-size:9.5px; color:var(--mute-2); letter-spacing:.06em}
+.stat::after{content:""; position:absolute; top:0; left:18px; right:18px; height:1px; background:linear-gradient(90deg,transparent,var(--red),transparent); opacity:0; transition:.3s}
+.stat:hover::after{opacity:.6}
+
+/* ── footer / contacto ──────────────────────────────────── */
+.contact{padding:90px 0 0}
+.contact-grid{display:grid; grid-template-columns:1.15fr .85fr; gap:56px; align-items:start; margin-bottom:70px}
+.contact h2{font-family:var(--fd); font-weight:700; font-size:clamp(26px,3.4vw,40px); line-height:1.1; margin-bottom:16px}
+.contact h2 em{font-style:normal; color:var(--red-bright)}
+.contact .c-sub{color:var(--txt-2); margin-bottom:30px; max-width:460px}
+.c-lines{display:grid; gap:12px}
+.c-line{display:flex; align-items:center; gap:14px; padding:14px 16px; border:1px solid var(--border); border-radius:5px; background:var(--surf); transition:.2s}
+.c-line:hover{border-color:rgba(207,16,36,.4)}
+.c-line .ic{display:grid; place-items:center; width:36px; height:36px; border-radius:4px; background:rgba(207,16,36,.1); color:var(--red-bright)}
+.c-line .ic svg{width:17px; height:17px}
+.c-line .tx{font-family:var(--fm); font-size:12.5px; color:var(--txt)}
+.c-line .tx small{display:block; font-family:var(--fs); font-size:10.5px; color:var(--mute); letter-spacing:.08em; text-transform:uppercase; margin-bottom:2px}
+.footer{border-top:1px solid var(--border); background:var(--bg-2); padding:64px 0 30px; position:relative; z-index:2}
+.footer-wrap{display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:40px; margin-bottom:44px}
+.footer-logo-row{display:flex; align-items:center; gap:12px; margin-bottom:14px}
+.footer-wm{font-family:var(--fd); font-weight:700; font-size:17px; letter-spacing:.04em}
+.footer-wm em{font-style:normal; color:var(--red-bright)}
+.footer-tag{font-family:var(--fm); font-size:9.5px; letter-spacing:.22em; color:var(--mute); text-transform:uppercase; display:block; margin-bottom:14px}
+.footer-blurb{color:var(--txt-2); font-size:13px; max-width:320px; line-height:1.7}
+.footer-col-head{font-family:var(--fm); font-size:10.5px; letter-spacing:.18em; text-transform:uppercase; color:var(--txt); margin-bottom:16px}
+.footer-col ul{list-style:none; display:grid; gap:9px}
+.footer-col a,.footer-col li{color:var(--mute); font-size:13px; transition:.2s}
+.footer-col a:hover{color:var(--red-bright)}
+.footer-col li.mono{font-family:var(--fm); font-size:11.5px; color:var(--txt-2)}
+.footer-col li.mono small{display:block; color:var(--mute); font-size:10px; margin-top:2px}
+details.refs{margin-top:6px}
+details.refs summary{cursor:pointer; font-family:var(--fm); font-size:11px; color:var(--red-bright); letter-spacing:.08em; list-style:none}
+details.refs summary::before{content:"▸ "; }
+details.refs[open] summary::before{content:"▾ "}
+details.refs ul{grid-template-columns:1fr; margin-top:10px}
+.footer-bottom{border-top:1px solid var(--border); padding-top:24px; display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; font-family:var(--fm); font-size:10.5px; letter-spacing:.1em; color:var(--mute-2)}
+.footer-bottom b{color:var(--mute); font-weight:400}
+
+/* ── scroll progress ────────────────────────────────────── */
+.prog{position:fixed; top:0; left:0; height:2px; background:linear-gradient(90deg,var(--red),var(--red-bright)); width:0; z-index:60; box-shadow:0 0 12px var(--red-glow)}
+
+/* ── responsive ─────────────────────────────────────────── */
+@media (max-width:960px){
+  .hero-wrap{grid-template-columns:1fr; gap:40px}
+  .perfil-grid,.contact-grid{grid-template-columns:1fr; gap:40px}
+  .layers,.arsenal{grid-template-columns:1fr 1fr}
+  .logros,.form{grid-template-columns:1fr}
+  .footer-wrap{grid-template-columns:1fr 1fr}
+  .stats-in{grid-template-columns:1fr 1fr}
+  .stat{border-bottom:1px solid var(--border)}
+}
+@media (max-width:700px){
+  .topnav-links{
+    position:fixed; top:64px; left:0; right:0; flex-direction:column; align-items:stretch;
+    background:rgba(6,5,8,.98); border-bottom:1px solid var(--border); padding:10px 20px 16px; gap:2px;
+    display:none;
+  }
+  .topnav-links.open{display:flex}
+  .topnav-links a{padding:12px 8px}
+  .burger{display:block}
+  .layers,.arsenal{grid-template-columns:1fr}
+  .hero{ padding-top:130px}
+  .lang-row{grid-template-columns:1fr 1fr; grid-auto-rows:auto}
+  .lang-lvl{text-align:left}
+  .fcard summary .fcnt{display:none}
+  .fcard summary .fcaret{margin-left:auto}
+  .footer-wrap{grid-template-columns:1fr}
+  .mq.has-label .mq-in{margin-left:0}
+  .mq-label{position:static; padding:12px 28px 0}
+}
+@media print{
+  .topnav,.hero-scroll,.mq,.prog,.burger,.hero-actions .btn-ghost{display:none !important}
+  body{background:#fff;color:#111}
+  section{padding:40px 0;break-inside:avoid}
+  .wrap{max-width:100%;padding:0 10mm}
+  .layer,.job-card,.tool,.logro,.fcard,.edu,.c-line{break-inside:avoid;background:#fff;border-color:#ccc}
+  .reveal{opacity:1 !important;transform:none !important}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-grid" aria-hidden="true"></div>
+<svg class="bg-grain" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+  <filter id="grain-f">
+    <feTurbulence type="fractalNoise" baseFrequency="0.55" numOctaves="3" stitchTiles="stitch">
+      <animate attributeName="seed" values="0;1;2;3;4;5;6;7;8;9;10;11;12" dur=".7s" repeatCount="indefinite" calcMode="discrete"/>
+    </feTurbulence>
+    <feColorMatrix type="saturate" values="0"/>
+  </filter>
+  <rect width="100%" height="100%" filter="url(#grain-f)"/>
+</svg>
+<div class="bg-vignette" aria-hidden="true"></div>
+<div class="prog" id="prog"></div>
+
+<!-- ═══════════════ NAV ═══════════════ -->
+<header class="topnav">
+  <div class="topnav-in">
+    <a class="logo" href="#top" aria-label="Inicio">
+      <span class="logo-mark">
+        <svg width="34" height="34" viewBox="0 0 100 100" fill="none" aria-hidden="true">
+          <polygon points="50,18 40,34 60,34" fill="#cf1024"/>
+          <polygon points="28,35 72,35 63,53 37,53" fill="#cf1024"/>
+          <polygon points="37,54 63,54 54,72 46,72" fill="#cf1024" fill-opacity="0.62"/>
+          <polygon points="46,73 54,73 50,86" fill="#cf1024" fill-opacity="0.36"/>
+          <line x1="6" y1="34" x2="26" y2="34" stroke="#cf1024" stroke-width="2" stroke-opacity="0.55" stroke-linecap="round"/>
+          <line x1="74" y1="34" x2="94" y2="34" stroke="#cf1024" stroke-width="2" stroke-opacity="0.55" stroke-linecap="round"/>
+        </svg>
+      </span>
+      <span>
+        <span class="logo-wm">JUAN<em>DAVID</em></span>
+        <span class="logo-tag">Analista · Red Team</span>
+      </span>
+    </a>
+    <button class="burger" id="burger" aria-label="Menú">☰</button>
+    <ul class="topnav-links" id="navlinks">
+      <li><a href="#perfil">Perfil</a></li>
+      <li><a href="#ataque">Ataque</a></li>
+      <li><a href="#experiencia">Experiencia</a></li>
+      <li><a href="#arsenal">Arsenal</a></li>
+      <li><a href="#formacion">Formación</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+      <li style="padding-left:10px"><a class="nav-cta" href="./CV_Juan_David_Valencia.pdf" target="_blank">Descargar CV ↓</a></li>
+    </ul>
+  </div>
+</header>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<header id="top" class="hero">
+  <div class="hero-wrap wrap">
+    <div class="hero-content">
+      <p class="over-line"><b>$</b> whoami &nbsp;·&nbsp; <span>juandavid@redteam</span> &nbsp;▮</p>
+      <h1 class="hero-title">
+        <span class="rl">Exploto lo que otros</span><br>
+        <em>ni saben que existe.</em>
+      </h1>
+      <p class="hero-sub">
+        Analista <b>Red Team</b> y pentester ofensivo. Pruebas de seguridad de caja negra, gris y blanca sobre
+        <b>web, red, infraestructura, Active Directory e IoT</b>, bajo metodologías
+        <b>PTES</b> y <b>OWASP Top 10</b>. Bogotá, Colombia.
+      </p>
+      <div class="hero-actions">
+        <a class="btn btn-red" href="#experiencia">Ver experiencia <span>→</span></a>
+        <a class="btn btn-ghost btn-mono" href="#ataque">Superficie de ataque</a>
+        <a class="btn btn-gold btn-mono" href="./CV_Juan_David_Valencia.pdf" target="_blank">Descargar CV ↓</a>
+      </div>
+    </div>
+
+    <div class="term reveal" aria-hidden="true">
+      <div class="term-bar">
+        <span class="term-dot r"></span><span class="term-dot y"></span><span class="term-dot g"></span>
+        <span class="term-name">engagements<span>/web-internal</span> · <b>juanval</b>@bgx</span>
+        <span style="margin-left:auto" class="ts"><b>●</b> REC</span>
+      </div>
+      <div class="term-body" id="termbody"></div>
+      <div class="term-status">
+        <span class="ts">sess:<b>active</b></span>
+        <span class="ts">met: <span class="c">PTES</span></span>
+        <span class="ts">owasp:<b>top10</b></span>
+        <span class="ts">scope:<span class="g">locked</span></span>
+        <span class="ts">report:<span class="m">due</span></span>
+      </div>
+    </div>
+  </div>
+  <div class="hexline" aria-hidden="true">9F A2 7C 1B · 0xDEAD BEEF · TTL:3600 · ENC:AES-256</div>
+  <div class="wrap">
+    <div class="hero-scroll">SCROLL PARA NAVEGAR <b class="arr">↓</b></div>
+  </div>
+</header>
+
+<!-- ═══════════════ MARQUEE ═══════════════ -->
+<div class="mq has-label">
+  <div class="mq-label">LIVE · ENGAGEMENT</div>
+  <div class="mq-in">
+    <div class="mq-seq">
+      <span><b>Web App</b> Pentesting</span><span><b>Active Directory</b> &amp; IOT</span><span><b>Red</b> Interna/Externa</span><span><b>OSINT</b> Suplantación</span><span><b>Blue Team</b> XDR / SIEM</span><span><b>OWASP</b> Top 10</span><span><b>PTES</b> Metodología</span><span><b>PoC</b> Validación</span><span><b>Hardening</b></span>
+    </div>
+    <div class="mq-seq">
+      <span><b>Web App</b> Pentesting</span><span><b>Active Directory</b> &amp; IOT</span><span><b>Red</b> Interna/Externa</span><span><b>OSINT</b> Suplantación</span><span><b>Blue Team</b> XDR / SIEM</span><span><b>OWASP</b> Top 10</span><span><b>PTES</b> Metodología</span><span><b>PoC</b> Validación</span><span><b>Hardening</b></span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ PERFIL ═══════════════ -->
+<section id="perfil">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="sec-no">01</div>
+      <div>
+        <div class="sec-title">Perfil <em>Profesional</em></div>
+        <div class="sec-sub">recon · contexto · trayectoria</div>
+      </div>
+      <div class="head-tag"><b>●</b> ANALISTA RED TEAM</div>
+    </div>
+    <div class="perfil-grid">
+      <div class="reveal">
+        <p>
+          Analista Red Team con <strong>experiencia práctica en pentesting ofensivo</strong> sobre entornos web, red,
+          infraestructura, Active Directory y dispositivos IoT, para clientes públicos y privados en Colombia.
+          Ejecuto pruebas de caja negra, gris y blanca bajo metodologías <strong>PTES</strong> y
+          <strong>OWASP Top 10</strong>, con frameworks de referencia como MITRE ATT&amp;CK, CVE y NIST.
+        </p>
+        <p>
+          Uso herramientas como <strong>Burp Suite, Metasploit, Nmap, Nessus, OWASP ZAP y Nikto</strong> para
+          identificar, validar y priorizar vulnerabilidades con base en su criticidad e impacto real sobre el negocio.
+          Complemento el enfoque ofensivo con experiencia en <strong>Blue Team</strong> y respuesta a incidentes sobre
+          plataformas XDR (Trend Micro Vision One, Palo Alto Prisma, CrowdStrike Falcon).
+        </p>
+        <p>
+          Estudiante de noveno semestre de <strong>Ingeniería de Sistemas</strong> y miembro de las comunidades de
+          ciberseguridad <strong>GISAC</strong> y <strong>SIRSEG</strong>.
+        </p>
+        <div class="chips" style="margin-top:10px">
+          <span class="chip r">PTES</span><span class="chip r">OWASP Top 10</span><span class="chip r">MITRE ATT&amp;CK</span>
+          <span class="chip r">NIST</span><span class="chip r">CVE DB</span><span class="chip">Caja negra / gris / blanca</span>
+          <span class="chip c">Defensive · Blue Team</span>
+        </div>
+      </div>
+      <div class="reveal">
+        <div class="syscard">
+          <div class="syscard-title"><b>SYSINFO</b> · juandavid_valencia</div>
+          <div class="syscard-body">
+            <div class="syscard-row"><span class="k">name</span><span class="v"><em>JUAN DAVID VALENCIA C.</em></span></div>
+            <div class="syscard-row"><span class="k">role</span><span class="v">Analista Red Team / Pentester</span></div>
+            <div class="syscard-row"><span class="k">base</span><span class="v">Bogotá · Colombia</span></div>
+            <div class="syscard-row"><span class="k">target</span><span class="v">Web · Red · AD · <span class="c">IoT</span></span></div>
+            <div class="syscard-row"><span class="k">method</span><span class="v">PTES · OWASP · NIST</span></div>
+            <div class="syscard-row"><span class="k">estado</span><span class="v">9.º sem. Ing. Sistemas</span></div>
+            <div class="syscard-row"><span class="k">sectors</span><span class="v">Público &amp; privado</span></div>
+            <div class="syscard-row"><span class="k">comunid.</span><span class="v">GISAC · SIRSEG</span></div>
+            <div class="dots"><i class="hot"></i><i class="hot"></i><i></i><i></i><i></i><i></i><i class="hot"></i><i class="hot"></i></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ ATAQUE ═══════════════ -->
+<section id="ataque" style="background:var(--bg-2); border-top:1px solid var(--border); border-bottom:1px solid var(--border)">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="sec-no">02</div>
+      <div>
+        <div class="sec-title">Superficie <em>de ataque</em></div>
+        <div class="sec-sub">del reconocimiento a la explotación</div>
+      </div>
+      <div class="head-tag"><b>PTES</b> · RECON → EXPLOIT → REPORT</div>
+    </div>
+    <div class="layers">
+      <div class="layer reveal">
+        <div class="layer-no">01</div>
+        <div class="dep">0 m → 400 m · <span>WEB &amp; APP</span></div>
+        <div class="route"><b>SUPERFICIE</b> <span class="sep">::</span> donde empiezan los usuarios</div>
+        <h3>Aplicaciones <em>web</em></h3>
+        <p>Formularios, APIs, endpoints y sesiones. Evaluación bajo OWASP Top 10 con validación manual y
+        PoC controladas sobre cada hallazgo.</p>
+        <div class="chips">
+          <span class="chip">Burp Suite</span><span class="chip">OWASP ZAP</span><span class="chip">DirBuster</span>
+          <span class="chip">SQL Injection</span><span class="chip">LFI / RCE</span><span class="chip r">PoC</span>
+        </div>
+      </div>
+      <div class="layer reveal">
+        <div class="layer-no">02</div>
+        <div class="dep">400 m → 2,000 m · <span>RED &amp; INFRA</span></div>
+        <div class="route"><b>PROFUNDIDAD</b> <span class="sep">::</span> el inventario real</div>
+        <h3>Red e <em>infraestructura</em></h3>
+        <p>Host discovery, fingerprinting y construcción de rutas de ataque sobre servicios expuestos,
+        apoyando procesos de hardening y reducción de falsos positivos.</p>
+        <div class="chips">
+          <span class="chip">Nmap</span><span class="chip">Metasploit</span><span class="chip">MSFvenom</span>
+          <span class="chip">Nessus</span><span class="chip">Nikto</span><span class="chip">Enum4linux</span>
+        </div>
+      </div>
+      <div class="layer reveal">
+        <div class="layer-no">03</div>
+        <div class="dep">2,000 m → ABYSS · <span>AD &amp; IOT</span></div>
+        <div class="route"><b>ABISMO</b> <span class="sep">::</span> donde termina el perímetro</div>
+        <h3>Active Directory <em>&amp; IoT</em></h3>
+        <p>Configuraciones inseguras, credenciales débiles y dispositivos expuestos: vectores de acceso
+        indebido que los escaneos automáticos no detectan.</p>
+        <div class="chips">
+          <span class="chip">Active Directory</span><span class="chip">IoT</span><span class="chip">Credenciales</span>
+          <span class="chip">Superficies ocultas</span><span class="chip c">Hardening</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ EXPERIENCIA ═══════════════ -->
+<section id="experiencia">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="sec-no">03</div>
+      <div>
+        <div class="sec-title">Experiencia <em>operativa</em></div>
+        <div class="sec-sub">engagements · compromisos · reportes</div>
+      </div>
+      <div class="head-tag">EN <b>3</b> ORGANIZACIONES</div>
+    </div>
+    <div class="timeline">
+      <article class="job reveal">
+        <div class="job-card">
+          <div class="job-top">
+            <div>
+              <div class="job-role">Analista <em>Red Team</em></div>
+              <div class="job-company">EYC Ingenieros · Colombia</div>
+            </div>
+            <div class="job-date"><span class="live"></span>Abr 2025 — Actualidad</div>
+          </div>
+          <ul>
+            <li>Pentesting ofensivo a clientes públicos y privados sobre aplicaciones web, redes, infraestructura, Active Directory y dispositivos IoT, adaptando alcance y profundidad a cada cliente.</li>
+            <li>Pruebas de caja negra, gris y blanca aplicando metodología PTES y OWASP Top 10, desde reconocimiento y enumeración hasta explotación y reporte.</li>
+            <li>Análisis de vulnerabilidades con Burp Suite y Nessus, complementado con validación manual y PoC para confirmar impacto real y reducir falsos positivos.</li>
+            <li>Evaluación de configuraciones AD e IoT expuestas: vectores de acceso indebido, credenciales débiles y superficies no detectadas por escaneos automáticos.</li>
+            <li>Reportes técnicos y ejecutivos con hallazgos priorizados por criticidad, evidencia y recomendaciones de remediación.</li>
+          </ul>
+          <div class="job-tags"><span class="chip">Web App</span><span class="chip">Active Directory</span><span class="chip">IoT</span><span class="chip">Infraestructura</span><span class="chip">Reportes</span></div>
+        </div>
+      </article>
+
+      <article class="job reveal">
+        <div class="job-card">
+          <div class="job-top">
+            <div>
+              <div class="job-role">Especialista en <em>Seguridad Digital</em></div>
+              <div class="job-company">Black Hat Archetype</div>
+            </div>
+            <div class="job-date">Marzo 2025 — Abril 2025</div>
+          </div>
+          <ul>
+            <li><strong>Pentesting / Red Team:</strong> análisis de vulnerabilidades en activos internos y externos; mapeo con Nmap; evaluaciones web OWASP Top 10 con validación manual y PoC.</li>
+            <li><strong>OSINT:</strong> investigación de exposición digital, riesgos de suplantación (typosquatting, dominios similares, filtración de información) y recomendaciones de contención.</li>
+            <li><strong>Blue Team / SOC:</strong> análisis y correlación de alertas XDR/SIEM, validación true/false positive y respuesta a incidentes (evidencias, línea de tiempo, contención).</li>
+            <li><strong>Hardening On-Prem / Cloud:</strong> implementación y operación de Trend Micro Vision One, despliegue de CrowdStrike Falcon y soporte de Palo Alto Networks (NGFW / PAN-OS).</li>
+            <li>Reportes técnicos y ejecutivos y capacitación interna en Trend Micro, Palo Alto y CrowdStrike.</li>
+          </ul>
+          <div class="job-tags"><span class="chip">Red Team</span><span class="chip">OSINT</span><span class="chip">SOC / XDR</span><span class="chip">EDR</span><span class="chip">NGFW</span></div>
+        </div>
+      </article>
+
+      <article class="job reveal">
+        <div class="job-card">
+          <div class="job-top">
+            <div>
+              <div class="job-role">PSO · Operaciones <em>y Datos</em></div>
+              <div class="job-company">Frontera Energy Corp</div>
+            </div>
+            <div class="job-date">Dic 2023 — Dic 2024</div>
+          </div>
+          <ul>
+            <li>Diseño y desarrollo de dashboards estratégicos en Power BI para visualización dinámica de KPIs de operación, riesgo y cumplimiento.</li>
+            <li>Optimización de flujos operativos en SAP, mejorando la trazabilidad de procesos de contratación y seguimiento de recursos técnicos.</li>
+            <li>Gestión integral de proveedores: vinculación, actualización de perfiles y validación de información.</li>
+            <li>Mantenimiento y depuración de bases de datos sensibles de contratos operacionales, con alertas automatizadas de vencimientos y renovaciones.</li>
+          </ul>
+          <div class="job-tags"><span class="chip">Power BI</span><span class="chip">SAP</span><span class="chip">KPIs</span><span class="chip">Bases de datos</span><span class="chip">Proveedores</span></div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ LOGROS ═══════════════ -->
+<section id="logros" style="background:var(--bg-2); border-top:1px solid var(--border); border-bottom:1px solid var(--border)">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="sec-no">04</div>
+      <div>
+        <div class="sec-title">Logros <em>destacados</em></div>
+        <div class="sec-sub">hallazgos · validación · impacto</div>
+      </div>
+      <div class="head-tag">100% <b>VALIDADO</b></div>
+    </div>
+    <div class="logros">
+      <div class="logro reveal"><div class="logro-n">01</div><p><b>Vulnerabilidades críticas identificadas, validadas y priorizadas</b> en entornos web, red, Active Directory, IoT e infraestructura, reduciendo riesgos reales sobre activos de clientes públicos y privados.</p></div>
+      <div class="logro reveal"><div class="logro-n">02</div><p><b>Pruebas de caja negra, gris y blanca</b> con validación manual y PoC controladas, disminuyendo falsos positivos y elevando la calidad técnica de los reportes.</p></div>
+      <div class="logro reveal"><div class="logro-n">03</div><p><b>Configuraciones inseguras y servicios expuestos</b> no detectados por escaneos automáticos, apoyando procesos efectivos de hardening.</p></div>
+      <div class="logro reveal"><div class="logro-n">04</div><p><b>Análisis de superficie de ataque externa</b> y riesgos de suplantación digital: dominios similares, typosquatting y exposición de información pública.</p></div>
+      <div class="logro reveal"><div class="logro-n">05</div><p><b>Correlación de alertas XDR/SIEM</b> mejorando la detección temprana de amenazas y la respuesta ante incidentes reales.</p></div>
+      <div class="logro reveal"><div class="logro-n">06</div><p><b>Implementación y operación de plataformas de seguridad empresarial</b> — Trend Micro Vision One, CrowdStrike y Palo Alto Networks.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ ARSENAL ═══════════════ -->
+<section id="arsenal">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="sec-no">05</div>
+      <div>
+        <div class="sec-title">Arsenal <em>técnico</em></div>
+        <div class="sec-sub">herramientas · lenguajes · entornos</div>
+      </div>
+      <div class="head-tag">CAT <b>06</b></div>
+    </div>
+    <div class="arsenal">
+      <div class="tool reveal">
+        <div class="tool-cat"><span class="tool-idx">PEN</span><h4>Pentesting · Red Team</h4></div>
+        <div class="chips">
+          <span class="chip"><span>Metasploit</span><i>expl</i></span>
+          <span class="chip"><span>MSFvenom</span><i>payloads</i></span>
+          <span class="chip"><span>Burp Suite</span><i>web</i></span>
+          <span class="chip"><span>OWASP ZAP</span><i>web</i></span>
+          <span class="chip"><span>Nikto</span><i>scan</i></span>
+          <span class="chip"><span>DirBuster</span><i>enum</i></span>
+          <span class="chip"><span>Enum4linux</span><i>smb</i></span>
+        </div>
+      </div>
+      <div class="tool reveal">
+        <div class="tool-cat"><span class="tool-idx">VULN</span><h4>Análisis de Vulnerabilidades</h4></div>
+        <div class="chips">
+          <span class="chip"><span>Nessus</span><i>scan</i></span>
+          <span class="chip"><span>Greenbone</span><i>openvas</i></span>
+          <span class="chip"><span>Nmap</span><i>recon</i></span>
+          <span class="chip"><span>CVE DB</span><i>knowl.</i></span>
+          <span class="chip"><span>Snyk</span><i>sast</i></span>
+          <span class="chip r"><span>Validación manual</span><i>PoC</i></span>
+        </div>
+      </div>
+      <div class="tool reveal">
+        <div class="tool-cat"><span class="tool-idx">SOC</span><h4>Threat Detection · Blue Team</h4></div>
+        <div class="chips">
+          <span class="chip"><span>Trend Micro Vision One</span><i>xdr</i></span>
+          <span class="chip"><span>CrowdStrike Falcon</span><i>edr</i></span>
+          <span class="chip"><span>Palo Alto</span><i>ngfw</i></span>
+          <span class="chip"><span>XSOAR</span><i>soar</i></span>
+          <span class="chip"><span>FireMon</span><i>fw-mgmt</i></span>
+          <span class="chip"><span>Wireshark</span><i>análisis</i></span>
+          <span class="chip"><span>Snort · Suricata</span><i>ids</i></span>
+        </div>
+      </div>
+      <div class="tool reveal">
+        <div class="tool-cat"><span class="tool-idx">DEV</span><h4>Scripting · Desarrollo</h4></div>
+        <div class="chips">
+          <span class="chip"><span>C#</span><i>lang</i></span>
+          <span class="chip"><span>Python</span><i>lang</i></span>
+          <span class="chip"><span>Java</span><i>lang</i></span>
+          <span class="chip"><span>JavaScript</span><i>lang</i></span>
+          <span class="chip"><span>SQL</span><i>datos</i></span>
+          <span class="chip"><span>Bash</span><i>shell</i></span>
+        </div>
+      </div>
+      <div class="tool reveal">
+        <div class="tool-cat"><span class="tool-idx">OS</span><h4>Sistemas Operativos</h4></div>
+        <div class="chips">
+          <span class="chip"><span>Kali Linux</span><i>offensivo</i></span>
+          <span class="chip"><span>ParrotOS</span><i>offensivo</i></span>
+          <span class="chip"><span>Ubuntu</span><i>server</i></span>
+          <span class="chip"><span>Windows</span><i>adhoc</i></span>
+          <span class="chip"><span>macOS</span><i>workstation</i></span>
+        </div>
+      </div>
+      <div class="tool reveal">
+        <div class="tool-cat"><span class="tool-idx">FRW</span><h4>Frameworks · Metodologías</h4></div>
+        <div class="chips">
+          <span class="chip"><span>PTES</span><i>metodología</i></span>
+          <span class="chip"><span>OWASP</span><i>top 10</i></span>
+          <span class="chip"><span>MITRE ATT&amp;CK</span><i>tácticas</i></span>
+          <span class="chip"><span>NIST</span><i>framework</i></span>
+          <span class="chip"><span>ISO 27001</span><i>sgsd</i></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ FORMACIÓN ═══════════════ -->
+<section id="formacion" style="background:var(--bg-2); border-top:1px solid var(--border); border-bottom:1px solid var(--border)">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="sec-no">06</div>
+      <div>
+        <div class="sec-title">Formación <em>complementaria</em></div>
+        <div class="sec-sub">certificaciones · cursos · proveedores</div>
+      </div>
+      <div class="head-tag"><b>30+</b> CERTIFICACIONES</div>
+    </div>
+    <div class="form">
+      <details class="fcard reveal">
+        <summary><span class="fx">EC</span><span class="fn">EC-Council</span><span class="fcnt">+2</span><span class="fcaret">▸</span></summary>
+        <div class="fcourses">
+          <span class="chip">SQL Injection Attacks</span>
+          <span class="chip">Introduction to Dark Web, Anonymity &amp; Cryptocurrency</span>
+        </div>
+      </details>
+      <details class="fcard reveal">
+        <summary><span class="fx">RV</span><span class="fn">Reveald</span><span class="fcnt">+3</span><span class="fcaret">▸</span></summary>
+        <div class="fcourses">
+          <span class="chip">Epiphany Intelligence – Essentials</span>
+          <span class="chip r">EVE Essentials Certification</span>
+          <span class="chip r">EVE Technical Certification</span>
+        </div>
+      </details>
+      <details class="fcard reveal">
+        <summary><span class="fx">FT</span><span class="fn">Fortinet</span><span class="fcnt">+1</span><span class="fcaret">▸</span></summary>
+        <div class="fcourses"><span class="chip r">FCF — Fortinet Certified Fundamentals in Cybersecurity</span></div>
+      </details>
+      <details class="fcard reveal">
+        <summary><span class="fx">TM</span><span class="fn">Trend Micro Vision One · XDR</span><span class="fcnt">+6</span><span class="fcaret">▸</span></summary>
+        <div class="fcourses">
+          <span class="chip">Trend Vision One Platform Advanced</span>
+          <span class="chip">Security Operations Advanced</span>
+          <span class="chip">Cyber Risk Exposure Management Advanced</span>
+          <span class="chip">Endpoint Security Advanced</span>
+          <span class="chip">Email Security Advanced</span>
+          <span class="chip">Cloud Security Advanced</span>
+        </div>
+      </details>
+      <details class="fcard reveal">
+        <summary><span class="fx">PA</span><span class="fn">Palo Alto Networks</span><span class="fcnt">+6</span><span class="fcaret">▸</span></summary>
+        <div class="fcourses">
+          <span class="chip">GlobalProtect: Features</span>
+          <span class="chip">LevelUp: Intro to Prisma SASE</span>
+          <span class="chip">Prisma Cloud Expert Sessions (Technical)</span>
+          <span class="chip">Prisma Cloud: Runtime Protection</span>
+          <span class="chip">Prisma Cloud: Risk Prevention</span>
+          <span class="chip">Prisma Cloud: Visibility &amp; Control</span>
+        </div>
+      </details>
+      <details class="fcard reveal">
+        <summary><span class="fx">CS</span><span class="fn">Cisco Networking &amp; Cybersecurity</span><span class="fcnt">+2</span><span class="fcaret">▸</span></summary>
+        <div class="fcourses">
+          <span class="chip">Cyber Threat Management</span>
+          <span class="chip">Network Defense</span>
+        </div>
+      </details>
+      <details class="fcard reveal">
+        <summary><span class="fx">PZ</span><span class="fn">Platzi · Ciberseguridad, Redes y Linux</span><span class="fcnt">+8</span><span class="fcaret">▸</span></summary>
+        <div class="fcourses">
+          <span class="chip">Introducción al Pentesting</span>
+          <span class="chip">Seguridad Informática</span>
+          <span class="chip">Inteligencia para la Ciberseguridad</span>
+          <span class="chip">Seguridad Informática para Equipos Técnicos</span>
+          <span class="chip">Ingeniería Social: Técnicas, Ataques y Pretexting</span>
+          <span class="chip">DLP: Prevención de Pérdida de Datos</span>
+          <span class="chip">Preparación para la Certificación ISO 27001</span>
+        </div>
+      </details>
+      <details class="fcard reveal">
+        <summary><span class="fx">EN</span><span class="fn">Otros</span><span class="fcnt">+1</span><span class="fcaret">▸</span></summary>
+        <div class="fcourses">
+          <span class="chip">EnglishScore — Certificación de Inglés</span>
+        </div>
+      </details>
+    </div>
+
+    <!-- educación -->
+    <div id="educacion" style="margin-top:74px">
+      <div class="section-head reveal" style="margin-bottom:34px">
+        <div class="sec-no" style="font-size:30px">07</div>
+        <div>
+          <div class="sec-title">Educación <em>&amp; idiomas</em></div>
+          <div class="sec-sub">formación académica · lengua</div>
+        </div>
+      </div>
+      <div class="edu-grid">
+        <div class="edu reveal">
+          <div class="school">Universidad ECCI</div>
+          <div class="deg">Ingeniería de Sistemas</div>
+          <div class="yr">Bogotá, Colombia · <b>2024 — 2026</b></div>
+          <span class="badge on">● En curso · 9.º semestre</span>
+        </div>
+        <div class="edu reveal">
+          <div class="school">Universidad ECCI</div>
+          <div class="deg">Tecnólogo en Desarrollo Informático</div>
+          <div class="yr">Bogotá, Colombia · <b>2022 — 2025</b></div>
+          <span class="badge done">✓ Finalizado</span>
+        </div>
+      </div>
+      <div class="lang">
+        <div class="lang-row reveal" style="transition-delay:.05s">
+          <div class="l-name">Español <small>lengua materna</small></div>
+          <div class="lang-bar"><i data-w="100"></i></div>
+          <div class="lang-lvl">Nativo</div>
+        </div>
+        <div class="lang-row reveal" style="transition-delay:.15s">
+          <div class="l-name">Inglés <small>inglés profesional</small></div>
+          <div class="lang-bar"><i data-w="62"></i></div>
+          <div class="lang-lvl">Intermedio</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ STATS ═══════════════ -->
+<div class="stats">
+  <div class="stats-in wrap" style="max-width:1180px">
+    <div class="stat reveal"><span class="num" data-count="1">0<b>+</b></span><span class="lbl">Año Red Team</span><span class="hint">EYC Ingenieros · en curso</span></div>
+    <div class="stat reveal"><span class="num" data-count="3">0</span><span class="lbl">Organizaciones</span><span class="hint">públicas &amp; privadas</span></div>
+    <div class="stat reveal"><span class="num" data-count="30">0<b>+</b></span><span class="lbl">Certificaciones</span><span class="hint">EC-Council · Fortinet · Und. Playful</span></div>
+    <div class="stat reveal"><span class="num" data-count="3">0</span><span class="lbl">Comunidades</span><span class="hint">GISAC · SIRSEG · Ingeniaría</span></div>
+  </div>
+</div>
+
+<!-- ═══════════════ CONTACTO ═══════════════ -->
+<section id="contacto" class="contact">
+  <div class="wrap">
+    <div class="contact-grid">
+      <div class="reveal">
+        <div class="over-line" style="margin-bottom:16px"><b>$</b> contacto &nbsp;·&nbsp; <span>canales abiertos</span></div>
+        <h2>¿Tienes una superficie <em>sin probar?</em></h2>
+        <p class="c-sub">Busco posiciones en pentesting ofensivo, red team y seguridad aplicada. Escríbeme — respondo igual de rápido que un PoC.</p>
+        <div class="c-lines">
+          <a class="c-line" href="mailto:juanda.valenciaci@ecci.edu.co">
+            <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg></span>
+            <span class="tx"><small>correo</small>juanda.valenciaci@ecci.edu.co</span>
+          </a>
+          <a class="c-line" href="tel:+573124686737">
+            <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.9a2 2 0 0 1-.5 2.1L8 10a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.9.6 2.9.7a2 2 0 0 1 1.7 2z"/></svg></span>
+            <span class="tx"><small>teléfono</small>(+57) 312 468 6737</span>
+          </a>
+          <a class="c-line" href="./CV_Juan_David_Valencia.pdf" target="_blank">
+            <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M12 18v-6"/><path d="m9 15 3 3 3-3"/></svg></span>
+            <span class="tx"><small>hoja de vida pdf</small>Descargar CV · Portafolio</span>
+          </a>
+        </div>
+      </div>
+      <div class="reveal">
+        <div class="syscard">
+          <div class="syscard-title"><b>NETMAP</b> · referencias</div>
+          <div class="syscard-body">
+            <div style="font-size:11px; color:var(--mute); letter-spacing:.08em; margin-bottom:8px">EXPERIENCIA EN CAMPO · AVALADA</div>
+            <div class="syscard-row"><span class="k">brandon</span><span class="v">B. Avila · Mercado Libre <em class="c">(Cyb. Dev)</em></span></div>
+            <div class="syscard-row"><span class="k">jeferson</span><span class="v">J. Benitez · <em>Black Hat</em></span></div>
+            <div class="syscard-row"><span class="k">wilson</span><span class="v">W. Ramírez · <em>Black Hat</em></span></div>
+            <div class="syscard-row"><span class="k">carlos</span><span class="v">C. Castellanos · <em>Frontera</em></span></div>
+            <div class="syscard-row"><span class="k">paola</span><span class="v">P. Mejía · <em>Frontera</em></span></div>
+            <div class="syscard-row"><span class="k">juan d.</span><span class="v">J. D. Rodríguez · <em>NTT DATA</em></span></div>
+            <div class="dots" style="margin-top:12px"><i class="hot"></i><i class="hot"></i><i class="hot"></i><i></i><i class="hot"></i><i></i><i></i><i></i></div>
+            <div style="margin-top:14px; font-family:var(--fm); font-size:9.5px; color:var(--mute-2); letter-spacing:.06em">detail · solicitar contactos al candidato</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-wrap">
+      <div class="footer-brand">
+        <div class="footer-logo-row">
+          <svg width="36" height="36" viewBox="0 0 100 100" fill="none" aria-hidden="true">
+            <polygon points="50,18 40,34 60,34" fill="#cf1024"/>
+            <polygon points="28,35 72,35 63,53 37,53" fill="#cf1024"/>
+            <polygon points="37,54 63,54 54,72 46,72" fill="#cf1024" fill-opacity="0.62"/>
+            <polygon points="46,73 54,73 50,86" fill="#cf1024" fill-opacity="0.36"/>
+          </svg>
+          <span class="footer-wm">JUAN<em>DAVID</em> VALENCIA</span>
+        </div>
+        <span class="footer-tag">Analista Red Team · Pentesting Ofensivo</span>
+        <p class="footer-blurb">Exploto lo que otros ni saben que existe — y lo reporto antes de que lo hagan los atacantes. Web, red, infraestructura, Active Directory e IoT.</p>
+      </div>
+      <div class="footer-col">
+        <p class="footer-col-head">Navegación</p>
+        <ul>
+          <li><a href="#perfil">Perfil</a></li>
+          <li><a href="#ataque">Superficie de ataque</a></li>
+          <li><a href="#experiencia">Experiencia</a></li>
+          <li><a href="#arsenal">Arsenal técnico</a></li>
+          <li><a href="#formacion">Formación</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <p class="footer-col-head">Contacto</p>
+        <ul>
+          <li class="mono"><a href="mailto:juanda.valenciaci@ecci.edu.co">juanda.valenciaci@ecci.edu.co</a></li>
+          <li class="mono"><a href="tel:+573124686737">+57 312 468 6737</a></li>
+          <li class="mono">Bogotá · Colombia</li>
+          <li class="mono">9.º semestre Ing. Sistemas</li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <p class="footer-col-head">Referencias · Comunidad</p>
+        <ul>
+          <li class="mono">GISAC <small>comunidad ciberseguridad</small></li>
+          <li class="mono">SIRSEG <small>seguridad &amp; respuesta</small></li>
+          <li class="mono">ESPAÑOL · NATIVO</li>
+          <li class="mono">ENGLISH · INTERMEDIATE</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 <b>Juan David Valencia Cifuentes</b> · CV_Juan_David_Valencia.pdf</span>
+      <span>UTILIZA TU SUPERPODER PARA BIEN · PTES · OWASP · MITRE</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ── term typing ─────────────────────────────────────── */
+  var lines = [
+    {t:'<span class="c-mut">$</span> nmap -sV -Pn 10.0.0.0/24', d:900},
+    {t:'<span class="c-dim">PORT</span>   <span class="c-dim">STATE</span>   <span class="c-dim">SERVICE</span>   <span class="c-dim">VERSION</span>', d:200},
+    {t:'80/tcp   <span class="c-grn">open</span>    http      Apache/2.4.57 <span class="c-dim">(Debian)</span>', d:200},
+    {t:'443/tcp  <span class="c-grn">open</span>    ssl/http  OpenSSL 1.1.1w', d:200},
+    {t:'445/tcp  <span class="c-grn">open</span>    smb       Samba 4.17 <span class="c-grn">← AD join</span>', d:200},
+    {t:'', d:120},
+    {t:'<span class="c-dim">[i]</span> scope: web · ad · iot &nbsp;|&nbsp; alerts: 0 (manual)', d:300},
+    {t:'<span class="c-mut">$</span> burp -u https://app.target --owasp top10', d:900},
+    {t:'POST /upload → <span class="c-red">403</span> | <span class="c-cyan">[+]</span> bypass via multipart', d:600},
+    {t:'<span class="c-cyan">[+]</span> LFI → /etc/passwd <span class="c-grn">readable</span>', d:600},
+    {t:'<span class="c-cyan">[+]</span> AD: DC creds weak → <span class="c-grn">hash dump</span> (ms14-068)', d:900},
+    {t:'', d:120},
+    {t:'<span class="c-red">[!]</span> RCE CONFIRMED — PoC en reporte <span class="c-whi">#JV-00123</span>', d:400},
+    {t:'<span class="c-grn">[✓]</span> criticidad: <span class="c-red">ALTA</span> · validación manual completa', d:900}
+  ];
+  var body = document.getElementById('termbody');
+  var tIdx = 0, line = '';
+  var caret = '<span class="term-caret"></span>';
+  function typeLine(){
+    if (tIdx >= lines.length){ setTimeout(reset, 4000); return; }
+    var o = lines[tIdx];
+    line = '';
+    var i = 0;
+    var plain = o.t.replace(/<[^>]+>/g,'');
+    (function tick(){
+      if (i <= plain.length){
+        body.innerHTML = '<div class="tl">'+ line + caret +'</div>';
+        // rebuild raw line from typed segment: we type raw chars, but need HTML
+        i++;
+        setTimeout(tick, 8);
+      } else {
+        line = o.t; // jump to full HTML
+        body.innerHTML = '<div class="tl">'+ o.t + caret +'</div>';
+        body.scrollTop = body.scrollHeight;
+        tIdx++;
+        setTimeout(typeLine, o.d);
+      }
+    })();
+  }
+  function reset(){
+    body.innerHTML = '';
+    tIdx = 0;
+    setTimeout(typeLine, 600);
+  }
+  setTimeout(typeLine, 800);
+
+  /* ── reveal on scroll ─────────────────────────────────── */
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if (e.isIntersecting){ e.target.classList.add('on'); io.unobserve(e.target); }
+    });
+  }, {threshold:.12, rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+
+  /* ── counters ─────────────────────────────────────────── */
+  var cio = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if (!e.isIntersecting) return;
+      cio.unobserve(e.target);
+      var c=0, target=+e.target.dataset.count, el=e.target;
+      var step=function(){
+        c+=Math.max(1, Math.round(target/36));
+        if (c>=target){ c=target; }
+        el.firstChild.nodeValue = c;
+        if (c<target) requestAnimationFrame(step);
+      };
+      step();
+    });
+  }, {threshold:.5});
+  document.querySelectorAll('.num').forEach(function(el){ cio.observe(el); });
+
+  /* ── lang bars ────────────────────────────────────────── */
+  var lio = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if (!e.isIntersecting) return;
+      lio.unobserve(e.target);
+      e.target.style.width = e.target.dataset.w + '%';
+    });
+  }, {threshold:.4});
+  document.querySelectorAll('.lang-bar i').forEach(function(el){ lio.observe(el); });
+
+  /* ── scroll progress + active nav ─────────────────────── */
+  var prog = document.getElementById('prog');
+  var links = document.querySelectorAll('.topnav-links a[href^="#"]');
+  var sections = [];
+  links.forEach(function(a){ var s=document.querySelector(a.getAttribute('href')); if(s) sections.push([s,a]); });
+  window.addEventListener('scroll', function(){
+    var h = document.documentElement;
+    var sc = h.scrollTop / (h.scrollHeight - h.clientHeight);
+    prog.style.width = (sc*100) + '%';
+    var cur = h.scrollTop + 120;
+    sections.forEach(function(pair){
+      var s=pair[0]; if (cur >= s.offsetTop - 80) {
+        links.forEach(function(a){ a.classList.remove('active'); });
+        pair[1].classList.add('active');
+      }
+    });
+  }, {passive:true});
+
+  /* ── mobile menu ──────────────────────────────────────── */
+  var burger = document.getElementById('burger');
+  var nav = document.getElementById('navlinks');
+  burger.addEventListener('click', function(){ nav.classList.toggle('open'); });
+  nav.addEventListener('click', function(e){
+    if (e.target.tagName === 'A') nav.classList.remove('open');
+  });
+})();
+</script>
+</body>
+</html>
